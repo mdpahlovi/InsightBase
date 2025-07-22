@@ -1,0 +1,41 @@
+services:
+    postgres:
+        container_name: insightbase-postgres
+        image: postgres:alpine
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: insightbase
+        ports:
+            - 3000:5432
+        restart: always
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+        networks:
+            - local
+    backend:
+        container_name: insightbase-backend
+        image: mdpahlovi/insightbase-backend:latest
+        ports:
+            - 3001:3001
+        restart: always
+        networks:
+            - local
+        depend_on:
+            - postgres
+    frontend:
+        container_name: insightbase-frontend
+        image: mdpahlovi/insightbase-frontend:latest
+        ports:
+            - 3002:3002
+        restart: always
+        networks:
+            - local
+        depend_on:
+            - backend
+
+volumes:
+    pgdata:
+
+networks:
+    local:
