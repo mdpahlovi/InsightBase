@@ -1,10 +1,10 @@
 import express, { Express, Request, Response } from "express";
-import userRoutes from "./modules/users/users.routes";
 import { config } from "./config/config";
+import { authRoutes } from "./modules/auth/auth.routes";
 
 const app: Express = express();
 
-app.use("/users", userRoutes);
+app.use(`/${config.appPrefix}/auth`, authRoutes);
 
 app.get("/", (req: Request, res: Response) => {
     res.send("InsightBase Server");
