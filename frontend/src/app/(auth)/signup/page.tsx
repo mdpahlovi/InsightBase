@@ -1,24 +1,34 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuthState } from "@/stores/useAuthStore";
+import { FormEvent } from "react";
+import toast from "react-hot-toast";
 
 export default function SignupPage() {
-    async function signupAction(formData: FormData) {
-        "use server";
+    const { signup, signupLoading } = useAuthState();
 
-        const rawFormData = {
-            name: formData.get("name"),
-            email: formData.get("email"),
-            password: formData.get("password"),
-        };
+    async function handleSignup(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
 
-        console.log(rawFormData);
+        const formData = new FormData(event.currentTarget);
+        const name = formData.get("name") as string;
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+
+        if (name && email && password) {
+            signup({ name, email, password });
+        } else {
+            toast.error("All fields are required");
+        }
     }
 
     return (
-        <form action={signupAction}>
+        <form onSubmit={handleSignup}>
             <Card>
                 <CardContent className="space-y-4">
                     <div className="space-y-2">
@@ -42,8 +52,8 @@ export default function SignupPage() {
                             </a>{" "}
                         </Label>
                     </div>
-                    <Button type="submit" className="w-full" size="lg">
-                        Sign up
+                    <Button type="submit" className="w-full" size="lg" disabled={signupLoading}>
+                        {signupLoading ? "Signing up..." : "Sign up"}
                     </Button>
                 </CardContent>
             </Card>

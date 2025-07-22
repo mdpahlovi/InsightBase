@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { z, ZodError } from "zod";
-import { AppError } from "./AppError";
+import { z } from "zod";
 
 export const validate = (schema: z.ZodObject) => {
     return (req: Request, res: Response, next: NextFunction) => {
@@ -12,10 +11,6 @@ export const validate = (schema: z.ZodObject) => {
             });
             next();
         } catch (error) {
-            if (error instanceof ZodError) {
-                const meaasges = error.issues.map((issue) => issue.message);
-                next(new AppError(meaasges, 400));
-            }
             next(error);
         }
     };

@@ -3,21 +3,29 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuthState } from "@/stores/useAuthStore";
+import { FormEvent } from "react";
+import toast from "react-hot-toast";
 
 export default function SignInPage() {
-    async function signinAction(formData: FormData) {
-        "use server";
+    const { signin, signinLoading } = useAuthState();
 
-        const rawFormData = {
-            email: formData.get("email"),
-            password: formData.get("password"),
-        };
+    async function handleSignin(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
 
-        console.log(rawFormData);
+        const formData = new FormData(event.currentTarget);
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+
+        if (email && password) {
+            signin({ email, password });
+        } else {
+            toast.error("All fields are required");
+        }
     }
 
     return (
-        <form action={signinAction}>
+        <form onSubmit={handleSignin}>
             <Card>
                 <CardContent className="space-y-4">
                     <div className="space-y-2">
@@ -39,8 +47,8 @@ export default function SignInPage() {
                             </a>
                         </div>
                     </div>
-                    <Button type="submit" className="w-full" size="lg">
-                        Sign in
+                    <Button type="submit" className="w-full" size="lg" disabled={signinLoading}>
+                        {signinLoading ? "Signing in..." : "Sign in"}
                     </Button>
                 </CardContent>
             </Card>
