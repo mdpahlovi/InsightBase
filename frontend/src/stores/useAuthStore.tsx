@@ -1,4 +1,4 @@
-import axios, { isAxiosError } from "axios";
+import axios from "@/lib/axios";
 import { toast } from "react-hot-toast";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -31,7 +31,9 @@ export const useAuthState = create<AuthStateStore>()(
                     set({ user: response.data.data.user });
                     toast.success(response.data.message);
                 } catch (error) {
-                    toast.error(isAxiosError(error) ? error.response?.data?.message : "Something went wrong");
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    toast.error(error?.message);
                 } finally {
                     set({ signinLoading: false });
                 }
@@ -44,7 +46,9 @@ export const useAuthState = create<AuthStateStore>()(
                     set({ user: response.data.data.user });
                     toast.success(response.data.message);
                 } catch (error) {
-                    toast.error(isAxiosError(error) ? error.response?.data?.message : "Something went wrong");
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    toast.error(error?.message);
                 } finally {
                     set({ signupLoading: false });
                 }
@@ -59,7 +63,9 @@ export const useAuthState = create<AuthStateStore>()(
                     // @ts-ignore
                     toast.success(response.message);
                 } catch (error) {
-                    toast.error(isAxiosError(error) ? error.response?.data?.message : "Something went wrong");
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    toast.error(error?.message);
                 } finally {
                     set({ signoutLoading: false });
                 }
