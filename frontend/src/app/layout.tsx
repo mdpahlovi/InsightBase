@@ -1,16 +1,8 @@
 import type { Metadata } from "next";
-import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const headFont = Outfit({
-    variable: "--font-head",
-    subsets: ["latin"],
-});
-
-const bodyFont = Plus_Jakarta_Sans({
-    variable: "--font-body",
-    subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "InsightBase",
@@ -19,8 +11,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <html lang="en">
-            <body className={`${headFont.variable} ${bodyFont.variable} antialiased`}>{children}</body>
+        <html lang="en" className="dark">
+            <body className={`${inter.className} antialiased`}>{children}</body>
         </html>
     );
 }
