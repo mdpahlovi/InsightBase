@@ -6,21 +6,27 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuthState } from "@/stores/useAuthStore";
+import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
 import toast from "react-hot-toast";
 
 export default function SignInPage() {
+    const { replace } = useRouter();
     const { signin, signinLoading } = useAuthState();
 
     async function handleSignin(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        const formData = new FormData(event.currentTarget);
+        const formTarget = event.currentTarget;
+        const formData = new FormData(formTarget);
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
 
         if (email && password) {
             signin({ email, password });
+
+            formTarget.reset();
+            replace("/");
         } else {
             toast.error("All fields are required");
         }

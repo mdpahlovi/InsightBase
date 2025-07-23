@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/c
 import { Icon } from "@/components/ui/icon";
 import { Article } from "@/type";
 import Link from "next/link";
+import DeleteButton from "./delete-button";
 
 export default function ArticleCard({ article }: { article: Article }) {
     return (
@@ -27,9 +28,7 @@ export default function ArticleCard({ article }: { article: Article }) {
                             View
                         </Button>
                     </Link>
-                    <Button variant="denger" size="sm">
-                        <Icon name="Trash" />
-                    </Button>
+                    <DeleteButton article={article} />
                 </div>
             </CardContent>
         </Card>

@@ -34,4 +34,14 @@ export class ArticleController {
             data: article,
         });
     });
+
+    deleteArticle = catchAsync(async (req: Request, res: Response) => {
+        // @ts-ignore
+        const article = await this.articleService.deleteArticle(req.params.id, req.user);
+
+        res.status(200).json({
+            message: "Article deleted successfully",
+            data: article,
+        });
+    });
 }

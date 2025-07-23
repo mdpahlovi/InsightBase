@@ -16,17 +16,25 @@ export class ArticleService {
     }
 
     async getAllArticles(query: any, user: User) {
-        const search = query.search?.trim();
-        const tags = Array.isArray(query.tags) ? query.tags : [];
-
         let filter: Prisma.ArticleWhereInput = {};
 
-        if (search) {
-            filter = { ...filter, title: { contains: search, mode: "insensitive" } };
+        if (query?.search) {
+            filter = { ...filter, title: { contains: query?.search, mode: "insensitive" } };
         }
 
-        if (tags.length) {
-            filter = { ...filter, tags: { hasSome: tags } };
+        if (query?.tags) {
+            filter = { ...filter, tags: { hasSome: query?.tags?.split(",") } };
+        }
+
+        if (query?.summary) {
+            switch (query?.summary) {
+                case "with":
+                    filter = { ...filter, summary: { not: null } };
+                    break;
+                case "without":
+                    filter = { ...filter, summary: null };
+                    break;
+            }
         }
 
         const articles = await prisma.article.findMany({
@@ -36,8 +44,18 @@ export class ArticleService {
         return articles;
     }
 
-    getOneArticle(id: string, user: User) {
-        const article = prisma.article.findUnique({ where: { id } });
+    async getOneArticle(id: string, user: User) {
+        const article = await prisma.article.findUnique({ where: { id } });
+
+        if (!article) {
+            throw new AppError("Article not found", 404);
+        }
+
+        return article;
+    }
+
+    async deleteArticle(id: string, user: User) {
+        const article = await prisma.article.delete({ where: { id } });
 
         if (!article) {
             throw new AppError("Article not found", 404);

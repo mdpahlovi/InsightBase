@@ -8,13 +8,14 @@ import { Article } from "@/type";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
-async function getArticles(params: { search: string }) {
+async function getArticles(params: { [key: string]: string }) {
     try {
         const serverUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/article`;
         const authToken = (await cookies()).get("token")?.value;
         const query = new URLSearchParams(params).toString();
 
         const data = await fetch(`${serverUrl}?${query}`, {
+            next: { tags: ["articles"] },
             method: "GET",
             headers: { Authorization: `Bearer ${authToken}` },
         });
@@ -26,14 +27,14 @@ async function getArticles(params: { search: string }) {
     }
 }
 
-export default async function ArticlesPage(props: Promise<{ searchParams: { [key: string]: string } }>) {
-    const search = (await props).searchParams.search || "";
-    const articles: Article[] = await getArticles({ search });
+export default async function ArticlesPage(props: { searchParams: Promise<{ [key: string]: string }> }) {
+    const searchParams = await props.searchParams;
+    const articles: Article[] = await getArticles(searchParams);
 
     return (
         <>
             <header className="border-b">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto px-6">
                     <div className="flex justify-between items-center h-16">
                         <h1 className="text-2xl font-bold bg-gradient-to-r from-primary via-secondary to-accent inline-block text-transparent bg-clip-text">
                             Insight Base
@@ -42,8 +43,8 @@ export default async function ArticlesPage(props: Promise<{ searchParams: { [key
                     </div>
                 </div>
             </header>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <div className="flex-1 w-full max-w-7xl mx-auto p-6 flex flex-col gap-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div className="flex-1 max-w-md">
                         <Search />
                     </div>
@@ -64,7 +65,7 @@ export default async function ArticlesPage(props: Promise<{ searchParams: { [key
                         ))}
                     </div>
                 ) : (
-                    <div className="h-[calc(100vh-64px)] flex flex-col items-center justify-center">
+                    <div className="flex-1 flex flex-col items-center justify-center">
                         <Icon name="Book1" size={48} />
                         <h3 className="font-medium mt-4 mb-1">No articles yet</h3>
                         <p className="text-sm text-muted-foreground mb-5">Get started by creating your first article</p>

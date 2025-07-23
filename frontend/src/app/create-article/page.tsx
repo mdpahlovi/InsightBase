@@ -13,6 +13,7 @@ import { X } from "lucide-react";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
+import { revalidate } from "../action";
 
 export default function CreateArticlePage() {
     const [text, setText] = useState("");
@@ -30,8 +31,9 @@ export default function CreateArticlePage() {
             try {
                 const response = await axios.post("/article", { title, body, tags });
 
-                formTarget.reset();
                 setTags([]);
+                formTarget.reset();
+                revalidate("articles");
 
                 toast.success(response.data.message);
             } catch (error) {
