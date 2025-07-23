@@ -1,4 +1,4 @@
-import { PrismaClient, User } from "@prisma/client";
+import { Prisma, PrismaClient, User } from "@prisma/client";
 import { AppError } from "../../utils/AppError";
 import { CreateArticleBody } from "./articles.interface";
 
@@ -15,15 +15,22 @@ export class ArticleService {
         return article;
     }
 
-    getAllArticles(query: any, user: User) {
-        const search: string = query.search || "";
-        const tags: string[] = query.tags || [];
+    async getAllArticles(query: any, user: User) {
+        const search = query.search?.trim();
+        const tags = Array.isArray(query.tags) ? query.tags : [];
 
-        const articles = prisma.article.findMany({
-            where: {
-                title: { contains: search },
-                tags: { hasSome: tags },
-            },
+        let filter: Prisma.ArticleWhereInput = {};
+
+        if (search) {
+            filter = { ...filter, title: { contains: search, mode: "insensitive" } };
+        }
+
+        if (tags.length) {
+            filter = { ...filter, tags: { hasSome: tags } };
+        }
+
+        const articles = await prisma.article.findMany({
+            where: { ...filter },
         });
 
         return articles;

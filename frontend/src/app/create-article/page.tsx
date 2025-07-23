@@ -8,6 +8,7 @@ import { Icon } from "@/components/ui/icon";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import axios from "@/lib/axios";
 import { X } from "lucide-react";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
@@ -20,12 +21,24 @@ export default function CreateArticlePage() {
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        const formData = new FormData(event.currentTarget);
+        const formTarget = event.currentTarget;
+        const formData = new FormData(formTarget);
         const title = formData.get("title") as string;
         const body = formData.get("body") as string;
 
-        if (title && tags.length > 0 && body) {
-            console.log({ title, tags, body });
+        if (title && body && tags.length > 0) {
+            try {
+                const response = await axios.post("/article", { title, body, tags });
+
+                formTarget.reset();
+                setTags([]);
+
+                toast.success(response.data.message);
+            } catch (error) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                toast.error(error?.message);
+            }
         } else {
             toast.error("All fields are required");
         }
@@ -76,9 +89,23 @@ export default function CreateArticlePage() {
                                     className="flex-1"
                                     value={text}
                                     onChange={(e) => setText(e.target.value)}
-                                    onKeyDown={(e) => e.key === "Enter" && setTags([...tags, text])}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter" && text) {
+                                            setTags([...tags, text]);
+                                            setText("");
+                                        }
+                                    }}
                                 />
-                                <Button variant="outline" onClick={() => setTags([...tags, text])}>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => {
+                                        if (text) {
+                                            setTags([...tags, text]);
+                                            setText("");
+                                        }
+                                    }}
+                                >
                                     <Icon name="Add" size={24} />
                                 </Button>
                             </div>
@@ -87,7 +114,7 @@ export default function CreateArticlePage() {
 
                         <div>
                             <Label htmlFor="body" className="mb-2">
-                                Content
+                                Body
                             </Label>
                             <Textarea
                                 id="body"
@@ -99,7 +126,7 @@ export default function CreateArticlePage() {
                         </div>
 
                         <div className="flex justify-between items-center pt-6 border-t">
-                            <Link href="/dashboard">
+                            <Link href="/">
                                 <Button variant="outline">Cancel</Button>
                             </Link>
                             <Button type="submit">Publish Article</Button>

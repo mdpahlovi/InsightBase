@@ -27,13 +27,17 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
     }
 
     if (!token) {
-        return next(new AppError("Please login to access this route", 401));
+        token = req.headers.authorization?.split(" ")[1];
+    }
+
+    if (!token) {
+        return next(new AppError("Unauthorized, Please login", 401));
     }
 
     const decoded = jwt.verify(token, config.jwtSecret) as DecodedToken;
 
     if (!decoded) {
-        return next(new AppError("Please login to access this route", 401));
+        return next(new AppError("Unauthorized, Please login", 401));
     }
 
     req.user = decoded;
