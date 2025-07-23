@@ -2,8 +2,8 @@ import Header from "@/components/main/header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
+import { Icon } from "@/components/ui/icon";
 import { Input } from "@/components/ui/input";
-import { BookOpen, Calendar, Eye, Filter, Plus, Search, Sparkles, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 const articles = [
@@ -55,92 +55,74 @@ export default function ArticlesPage() {
                     </div>
                 </div>
             </header>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                {/* Search and Actions */}
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                    <div className="flex-1 max-w-md">
-                        <div className="relative">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" />
-                            <Input placeholder="Search articles..." className="pl-10" />
+            {articles?.length ? (
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                        <div className="flex-1 max-w-md">
+                            <div className="relative">
+                                <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                                    <Icon name="SearchNormal" />
+                                </div>
+                                <Input placeholder="Search articles..." className="pl-10" />
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Button variant="outline">
+                                <Icon name="Filter" />
+                                Filter
+                            </Button>
+                            <Link href="/create-article">
+                                <Button className="gap-1">
+                                    <Icon name="Add" size={24} />
+                                    Create Article
+                                </Button>
+                            </Link>
                         </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                        <Button variant="outline" size="sm">
-                            <Filter className="h-4 w-4 mr-2" />
-                            Filter
-                        </Button>
-                        <Link href="/create-article">
-                            <Button size="sm">
-                                <Plus className="h-4 w-4 mr-2" />
-                                Create Article
-                            </Button>
-                        </Link>
-                    </div>
-                </div>
-
-                {/* Articles Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {articles.map((article) => (
-                        <Card key={article.id} className="">
-                            <CardContent className="flex-1">
-                                <CardTitle className="text-lg mb-2">{article.title}</CardTitle>
-                                <CardDescription className="flex items-center mb-3">
-                                    <Calendar className="h-4 w-4 mr-1" />
-                                    {new Date(article.createdAt).toLocaleDateString()}
-                                </CardDescription>
-
-                                <p className="text-muted-foreground text-sm mb-3 line-clamp-3">{article.body}</p>
-
-                                <div className="flex flex-wrap gap-2 mb-4">
-                                    {article.tags.map((tag) => (
-                                        <Badge key={tag} variant="secondary" className="text-xs">
-                                            {tag}
-                                        </Badge>
-                                    ))}
-                                </div>
-                                <div className="flex-1 flex-grow flex justify-between items-center">
-                                    <div className="flex space-x-2">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {articles.map((article) => (
+                            <Card key={article.id} className="">
+                                <CardContent className="flex-1">
+                                    <CardTitle className="text-lg mb-2">{article.title}</CardTitle>
+                                    <CardDescription className="flex items-center gap-1 mb-3">
+                                        <Icon name="Calendar" size={14} />
+                                        {new Date(article.createdAt).toLocaleDateString()}
+                                    </CardDescription>
+                                    <p className="text-muted-foreground text-sm mb-3 line-clamp-3">{article.body}</p>
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        {article.tags.map((tag) => (
+                                            <Badge key={tag}>{tag}</Badge>
+                                        ))}
+                                    </div>
+                                    <div className="flex-1 flex-grow flex justify-between items-center">
                                         <Link href={`/article/${article.id}`}>
                                             <Button variant="outline" size="sm">
-                                                <Eye className="h-4 w-4 mr-1" />
+                                                <Icon name="Eye" />
                                                 View
                                             </Button>
                                         </Link>
-                                        {!article.summary && (
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                className="text-purple-600 border-purple-200 hover:bg-purple-50 bg-transparent"
-                                            >
-                                                <Sparkles className="h-4 w-4 mr-1" />
-                                                Summarize
-                                            </Button>
-                                        )}
+                                        <Button variant="denger" size="sm">
+                                            <Icon name="Trash" />
+                                        </Button>
                                     </div>
-                                    <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50">
-                                        <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
-
-                {/* Empty State (when no articles) */}
-                {articles.length === 0 && (
-                    <div className="text-center py-12">
-                        <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">No articles yet</h3>
-                        <p className="text-gray-600 mb-4">Get started by creating your first article</p>
-                        <Link href="/create-article">
-                            <Button>
-                                <Plus className="h-4 w-4 mr-2" />
-                                Create Article
-                            </Button>
-                        </Link>
+                                </CardContent>
+                            </Card>
+                        ))}
                     </div>
-                )}
-            </div>
+                </div>
+            ) : (
+                <div className="h-[calc(100vh-64px)] flex flex-col items-center justify-center">
+                    <Icon name="Book1" size={48} />
+                    <h3 className="font-medium mt-4 mb-1">No articles yet</h3>
+                    <p className="text-sm text-muted-foreground mb-5">Get started by creating your first article</p>
+                    <Link href="/create-article">
+                        <Button className="gap-1">
+                            <Icon name="Add" size={24} />
+                            Create Article
+                        </Button>
+                    </Link>
+                </div>
+            )}
         </>
     );
 }

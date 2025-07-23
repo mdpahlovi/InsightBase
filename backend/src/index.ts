@@ -2,10 +2,15 @@ import cors from "cors";
 import express, { Express, NextFunction, Request, Response } from "express";
 import { config } from "./config/config";
 import { authRoutes } from "./modules/auth/auth.routes";
+import { articleRoutes } from "./modules/articles/articles.routes";
 import { AppError } from "./utils/AppError";
 import { ZodError } from "zod";
+import cookieParser from "cookie-parser";
+import { protect } from "./utils/protect";
 
 const app: Express = express();
+
+app.use(cookieParser());
 
 app.use(
     cors({
@@ -17,6 +22,7 @@ app.use(
 app.use(express.json());
 
 app.use(`/${config.appPrefix}/auth`, authRoutes);
+app.use(`/${config.appPrefix}/articles`, articleRoutes);
 
 app.get("/", (req: Request, res: Response) => {
     res.send("InsightBase Server");
