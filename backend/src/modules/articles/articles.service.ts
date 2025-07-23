@@ -54,6 +54,16 @@ export class ArticleService {
         return article;
     }
 
+    async updateArticle(id: string, data: Prisma.ArticleUpdateInput, user: User) {
+        const article = await prisma.article.update({ where: { id }, data });
+
+        if (!article) {
+            throw new AppError("Article not found", 404);
+        }
+
+        return article;
+    }
+
     async deleteArticle(id: string, user: User) {
         const article = await prisma.article.delete({ where: { id } });
 

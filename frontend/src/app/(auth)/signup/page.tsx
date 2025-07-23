@@ -11,7 +11,7 @@ import { FormEvent } from "react";
 import toast from "react-hot-toast";
 
 export default function SignupPage() {
-    const { replace } = useRouter();
+    const route = useRouter();
     const { signup, signupLoading } = useAuthState();
 
     async function handleSignup(event: FormEvent<HTMLFormElement>) {
@@ -27,7 +27,7 @@ export default function SignupPage() {
             signup({ name, email, password });
 
             formTarget.reset();
-            replace("/");
+            route.replace("/");
         } else {
             toast.error("All fields are required");
         }

@@ -11,7 +11,7 @@ import { FormEvent } from "react";
 import toast from "react-hot-toast";
 
 export default function SignInPage() {
-    const { replace } = useRouter();
+    const route = useRouter();
     const { signin, signinLoading } = useAuthState();
 
     async function handleSignin(event: FormEvent<HTMLFormElement>) {
@@ -26,7 +26,7 @@ export default function SignInPage() {
             signin({ email, password });
 
             formTarget.reset();
-            replace("/");
+            route.replace("/");
         } else {
             toast.error("All fields are required");
         }
