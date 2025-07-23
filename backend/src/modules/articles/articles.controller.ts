@@ -36,13 +36,7 @@ export class ArticleController {
     });
 
     updateArticle = catchAsync(async (req: Request, res: Response) => {
-        // @ts-ignore
-        const article = await this.articleService.updateArticle(req.params.id, req.body, req.user);
-
-        res.status(200).json({
-            message: "Article updated successfully",
-            data: article,
-        });
+        return await this.articleService.updateArticle(req.params.id, req.body, res);
     });
 
     deleteArticle = catchAsync(async (req: Request, res: Response) => {

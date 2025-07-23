@@ -23,10 +23,7 @@ export default function SignInPage() {
         const password = formData.get("password") as string;
 
         if (email && password) {
-            signin({ email, password });
-
-            formTarget.reset();
-            route.replace("/");
+            signin({ email, password, route, element: formTarget });
         } else {
             toast.error("All fields are required");
         }

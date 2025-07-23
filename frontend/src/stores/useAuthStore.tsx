@@ -1,10 +1,11 @@
 import axios from "@/lib/axios";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { toast } from "react-hot-toast";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 export type User = { id: string; name: string; email: string; createdAt: Date };
-export type Credentials = { email: string; password: string };
+export type Credentials = { email: string; password: string; route: AppRouterInstance; element: HTMLFormElement };
 
 type AuthStateStore = {
     user: User | null;
@@ -24,11 +25,15 @@ export const useAuthState = create<AuthStateStore>()(
             signupLoading: false,
             signoutLoading: false,
 
-            signin: async ({ email, password }) => {
+            signin: async ({ email, password, route, element }) => {
                 set({ signinLoading: true });
                 try {
                     const response = await axios.post("/auth/signin", { email, password });
                     set({ user: response.data.data.user });
+
+                    element.reset();
+                    route.replace("/");
+
                     toast.success(response.data.message);
                 } catch (error) {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -39,11 +44,15 @@ export const useAuthState = create<AuthStateStore>()(
                 }
             },
 
-            signup: async ({ name, email, password }) => {
+            signup: async ({ name, email, password, route, element }) => {
                 set({ signupLoading: true });
                 try {
                     const response = await axios.post("/auth/signup", { name, email, password });
                     set({ user: response.data.data.user });
+
+                    element.reset();
+                    route.replace("/");
+
                     toast.success(response.data.message);
                 } catch (error) {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -13,7 +13,11 @@ export default function ArticleCard({ article }: { article: Article }) {
                 <CardTitle className="text-lg mb-2">{article.title}</CardTitle>
                 <CardDescription className="flex items-center gap-1 mb-3">
                     <Icon name="Calendar" size={14} />
-                    {new Date(article.createdAt).toLocaleDateString()}
+                    {new Date(article.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                    })}
                 </CardDescription>
                 <p className="text-muted-foreground text-sm mb-3 line-clamp-3">{article.body}</p>
                 <div className="flex flex-wrap gap-2 mb-4">

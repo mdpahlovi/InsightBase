@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuthState } from "@/stores/useAuthStore";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
 import toast from "react-hot-toast";
 
@@ -24,10 +24,7 @@ export default function SignupPage() {
         const password = formData.get("password") as string;
 
         if (name && email && password) {
-            signup({ name, email, password });
-
-            formTarget.reset();
-            route.replace("/");
+            signup({ name, email, password, route, element: formTarget });
         } else {
             toast.error("All fields are required");
         }

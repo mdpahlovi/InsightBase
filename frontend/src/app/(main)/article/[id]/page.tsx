@@ -1,9 +1,9 @@
+import Summary from "@/components/main/summary";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Icon } from "@/components/ui/icon";
 import { Article } from "@/type";
-import { Calendar, Sparkles } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { cookies } from "next/headers";
 
 async function getOneArticle(id: string): Promise<Article | null> {
@@ -50,7 +50,7 @@ export default async function ArticleDetailPage(props: { params: Promise<{ [key:
                                 Created on{" "}
                                 {new Date(article.createdAt).toLocaleDateString("en-US", {
                                     year: "numeric",
-                                    month: "long",
+                                    month: "short",
                                     day: "numeric",
                                 })}
                             </CardDescription>
@@ -65,34 +65,7 @@ export default async function ArticleDetailPage(props: { params: Promise<{ [key:
                     </div>
                 </CardContent>
             </Card>
-            {article.summary && (
-                <Card className="mb-6 border border-primary/40 bg-primary/20">
-                    <CardContent>
-                        <CardTitle className="flex items-center">
-                            <Sparkles className="h-5 w-5 mr-2" />
-                            AI Summary
-                        </CardTitle>
-                        <p className="mt-3 text-sm">{article.summary}</p>
-                    </CardContent>
-                </Card>
-            )}
-
-            {!article.summary && (
-                <Card className="mb-6 border border-primary/40 bg-primary/20">
-                    <CardContent>
-                        <div className="text-center">
-                            <Sparkles className="h-8 w-8 text-primary mx-auto mb-3" />
-                            <CardTitle className="mb-2">Generate AI Summary</CardTitle>
-                            <p className="text-sm mb-4">Get an AI-powered summary of this article to quickly understand the key points.</p>
-                            <Button>
-                                <Sparkles className="h-4 w-4 mr-2" />
-                                Generate Summary
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
-            )}
-
+            <Summary article={article} />
             <Card>
                 <CardContent>
                     <div className="prose prose-gray max-w-none">

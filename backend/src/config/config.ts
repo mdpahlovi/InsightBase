@@ -10,4 +10,6 @@ export const config = {
     frontendUrl: process.env.FRONTEND_URL,
 
     jwtSecret: process.env.JWT_SECRET as Secret,
+
+    geminiKey: process.env.GEMINI_API_KEY,
 };
