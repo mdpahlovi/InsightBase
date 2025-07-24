@@ -40,7 +40,9 @@ export default function Summary({ article }: { article: Article }) {
                 setSummary(buffer);
             }
             toast.success("Summary generated successfully");
-        } catch (error: any) {
+        } catch (error) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             toast.error(error?.message || "Failed to generate summary");
         } finally {
             setIsLoading(false);

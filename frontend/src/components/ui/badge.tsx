@@ -28,7 +28,11 @@ function Badge({
 }: React.ComponentProps<"span"> & VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
     const Comp = asChild ? Slot : "span";
 
-    return <Comp data-slot="badge" className={cn(badgeVariants({ variant }), className)} {...props} />;
+    return (
+        <Comp data-slot="badge" className={cn(badgeVariants({ variant }), className)} {...props}>
+            {typeof props.children === "string" ? props.children.replace(/(?:^|\s|[-/])\S/g, (m) => m.toUpperCase()) : props.children}
+        </Comp>
+    );
 }
 
 export { Badge, badgeVariants };

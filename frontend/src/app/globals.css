@@ -122,4 +122,15 @@
     body {
         @apply bg-background text-foreground flex flex-col min-h-screen;
     }
+    ::-webkit-scrollbar {
+        @apply w-1.5 h-1.5;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-card;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-primary rounded-full;
+    }
 }

@@ -25,6 +25,15 @@ export class ArticleController {
         });
     });
 
+    getAllTags = catchAsync(async (req: Request, res: Response) => {
+        const tags = await this.articleService.getAllTags();
+
+        res.status(200).json({
+            message: "Tags fetched successfully",
+            data: tags,
+        });
+    });
+
     getOneArticle = catchAsync(async (req: Request, res: Response) => {
         // @ts-ignore
         const article = await this.articleService.getOneArticle(req.params.id, req.user);

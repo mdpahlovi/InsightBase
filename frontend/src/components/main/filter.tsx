@@ -6,30 +6,25 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import axios from "@/lib/axios";
 import { Sparkles } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon } from "../ui/icon";
-
-const availableTags = [
-    "React",
-    "Next.js",
-    "SSR",
-    "TypeScript",
-    "Patterns",
-    "Development",
-    "Database",
-    "PostgreSQL",
-    "Design",
-    "CSS",
-    "Grid",
-    "Frontend",
-];
 
 export default function Filter() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [isOpen, setIsOpen] = useState(false);
+
+    const [availableTags, setAvailableTags] = useState<string[]>([]);
+
+    useEffect(() => {
+        axios
+            .get("/article/tags")
+            .then((response) => setAvailableTags(response.data.data))
+            .catch(() => setAvailableTags([]));
+    }, []);
 
     const [tags, setTags] = useState<string[]>(searchParams.get("tags")?.split(",") || []);
     const [summary, setSummary] = useState<string>(searchParams.get("summary") || "all");
@@ -88,7 +83,7 @@ export default function Filter() {
                             <Icon name="Tag" size={14} />
                             Tags
                         </Label>
-                        <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto">
+                        <div className="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto">
                             {availableTags.map((tag) => (
                                 <div key={tag} className="flex items-center gap-2">
                                     <Checkbox
@@ -103,7 +98,7 @@ export default function Filter() {
                                         }}
                                     />
                                     <Label htmlFor={`tag-${tag}`} className="cursor-pointer">
-                                        {tag}
+                                        {tag.replace(/(?:^|\s|[-/])\S/g, (m) => m.toUpperCase())}
                                     </Label>
                                 </div>
                             ))}

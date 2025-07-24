@@ -9,7 +9,9 @@ const prisma = new PrismaClient();
 
 export class ArticleService {
     async createArticle(data: CreateArticleBody, user: User) {
-        const article = await prisma.article.create({ data: { ...data, userId: user.id } });
+        const article = await prisma.article.create({
+            data: { ...data, tags: data.tags.map((tag) => tag.toLowerCase()), userId: user.id },
+        });
 
         if (!article) {
             throw new AppError("Article not created", 500);
@@ -19,7 +21,7 @@ export class ArticleService {
     }
 
     async getAllArticles(query: any, user: User) {
-        let filter: Prisma.ArticleWhereInput = {};
+        let filter: Prisma.ArticleWhereInput = { userId: user.id };
 
         if (query?.search) {
             filter = { ...filter, title: { contains: query?.search, mode: "insensitive" } };
@@ -47,8 +49,17 @@ export class ArticleService {
         return articles;
     }
 
+    async getAllTags() {
+        const tags: { tags: string[] }[] = await prisma.$queryRawUnsafe(`
+            SELECT array_agg(DISTINCT tag) AS tags
+            FROM articles, unnest(tags) AS tag;
+        `);
+
+        return tags?.length ? tags[0].tags : [];
+    }
+
     async getOneArticle(id: string, user: User) {
-        const article = await prisma.article.findUnique({ where: { id } });
+        const article = await prisma.article.findUnique({ where: { id, userId: user.id } });
 
         if (!article) {
             throw new AppError("Article not found", 404);
@@ -74,7 +85,7 @@ export class ArticleService {
     }
 
     async deleteArticle(id: string, user: User) {
-        const article = await prisma.article.delete({ where: { id } });
+        const article = await prisma.article.delete({ where: { id, userId: user.id } });
 
         if (!article) {
             throw new AppError("Article not found", 404);
