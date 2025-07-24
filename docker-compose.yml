@@ -7,7 +7,7 @@ services:
             POSTGRES_PASSWORD: postgres
             POSTGRES_DB: insightbase
         ports:
-            - 3000:5432
+            - 5433:5432
         restart: always
         volumes:
             - pgdata:/var/lib/postgresql/data
@@ -21,7 +21,7 @@ services:
         restart: always
         networks:
             - local
-        depend_on:
+        depends_on:
             - postgres
     frontend:
         container_name: insightbase-frontend
@@ -31,7 +31,7 @@ services:
         restart: always
         networks:
             - local
-        depend_on:
+        depends_on:
             - backend
 
 volumes:
