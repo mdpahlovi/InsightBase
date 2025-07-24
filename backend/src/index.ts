@@ -15,7 +15,7 @@ app.use(cookieParser());
 
 app.use(
     cors({
-        origin: config.frontendUrl?.split(","),
+        origin: config.frontendUrl,
         credentials: true,
     })
 );
