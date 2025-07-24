@@ -9,6 +9,8 @@ import { AppError } from "./utils/AppError";
 
 const app: Express = express();
 
+app.set("trust proxy", 1);
+
 app.use(cookieParser());
 
 app.use(
