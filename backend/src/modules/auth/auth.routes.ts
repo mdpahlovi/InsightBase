@@ -8,5 +8,6 @@ const authController = new AuthController();
 
 router.post("/signup", validate(authValidation.signup), authController.signup);
 router.post("/signin", validate(authValidation.signin), authController.signin);
+router.post("/signout", authController.signout);
 
 export const authRoutes = router;

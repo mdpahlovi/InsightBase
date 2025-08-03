@@ -34,4 +34,11 @@ export class AuthController {
             data: { user },
         });
     });
+
+    signout = catchAsync(async (req: Request, res: Response) => {
+        res.clearCookie("token");
+        res.status(200).json({
+            message: "Signout successfully",
+        });
+    });
 }

@@ -14,7 +14,7 @@ type AuthStateStore = {
     signoutLoading: boolean;
     signin: (credentials: Credentials) => Promise<void>;
     signup: (credentials: { name: string } & Credentials) => Promise<void>;
-    signOut: () => Promise<void>;
+    signOut: ({ route }: { route: AppRouterInstance }) => Promise<void>;
 };
 
 export const useAuthState = create<AuthStateStore>()(
@@ -62,15 +62,15 @@ export const useAuthState = create<AuthStateStore>()(
                     set({ signupLoading: false });
                 }
             },
-            signOut: async () => {
+            signOut: async ({ route }: { route: AppRouterInstance }) => {
                 set({ signoutLoading: true });
                 try {
                     const response = await axios.post("/auth/signout");
                     set({ user: null });
 
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    toast.success(response.message);
+                    route.replace("/signin");
+
+                    toast.success(response.data.message);
                 } catch (error) {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
