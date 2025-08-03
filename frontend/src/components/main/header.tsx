@@ -34,11 +34,11 @@ export default function Header() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="mt-3 w-56" align="end">
                 <DropdownMenuItem onClick={() => route.push("/")}>
-                    <Icon name="Home" /> Articles
+                    <Icon name="Home" /> Home
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem variant="destructive" onClick={() => signOut({ route })}>
-                    <Icon name="Logout" /> Log out
+                    <Icon name="Logout" /> Sign out
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

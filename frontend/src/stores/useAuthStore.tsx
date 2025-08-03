@@ -1,4 +1,5 @@
 import axios from "@/lib/axios";
+import { deleteCookie } from "cookies-next/client";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { toast } from "react-hot-toast";
 import { create } from "zustand";
@@ -63,21 +64,12 @@ export const useAuthState = create<AuthStateStore>()(
                 }
             },
             signOut: async ({ route }: { route: AppRouterInstance }) => {
-                set({ signoutLoading: true });
-                try {
-                    const response = await axios.post("/auth/signout");
-                    set({ user: null });
+                deleteCookie("token");
+                set({ user: null });
 
-                    route.replace("/signin");
+                route.replace("/signin");
 
-                    toast.success(response.data.message);
-                } catch (error) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    toast.error(error?.message);
-                } finally {
-                    set({ signoutLoading: false });
-                }
+                toast.success("Signout successfully");
             },
         }),
         {
