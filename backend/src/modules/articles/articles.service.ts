@@ -1,11 +1,10 @@
-import { Prisma, PrismaClient, User } from "@prisma/client";
+import { prisma } from "../../utils/prisma";
+import { Prisma, User } from "../../generated/prisma/client";
 import { AppError } from "../../utils/AppError";
 import { CreateArticleBody } from "./articles.interface";
 import { model } from "../../utils/model";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { Response } from "express";
-
-const prisma = new PrismaClient();
 
 export class ArticleService {
     async createArticle(data: CreateArticleBody, user: User) {

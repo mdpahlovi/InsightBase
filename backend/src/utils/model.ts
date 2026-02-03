@@ -1,9 +1,7 @@
 import { config } from "../config/config";
-import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
+import { ChatGroq } from "@langchain/groq";
 
-export const model = new ChatGoogleGenerativeAI({
-    apiKey: config.geminiKey,
-    model: "gemini-2.0-flash",
-    temperature: 0.7,
-    maxOutputTokens: 2048,
+export const model = new ChatGroq({
+    apiKey: config.groqApiKey,
+    model: "llama-3.1-8b-instant",
 });

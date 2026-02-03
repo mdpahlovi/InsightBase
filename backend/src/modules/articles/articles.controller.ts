@@ -45,6 +45,7 @@ export class ArticleController {
     });
 
     updateArticle = catchAsync(async (req: Request, res: Response) => {
+        // @ts-ignore
         return await this.articleService.updateArticle(req.params.id, req.body, res);
     });
 

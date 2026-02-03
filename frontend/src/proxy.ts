@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 const privateRoutes = ["/", "/create-article", /^\/article\/[^\/]+$/];
 const publicRoutes = ["/signin", "/signup"];
 
-export default async function middleware(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
     const path = req.nextUrl.pathname;
     const token = (await cookies()).get("token")?.value;
 

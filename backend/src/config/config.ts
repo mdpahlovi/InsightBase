@@ -11,5 +11,5 @@ export const config = {
 
     jwtSecret: process.env.JWT_SECRET as Secret,
 
-    geminiKey: process.env.GEMINI_API_KEY,
+    groqApiKey: process.env.GROQ_API_KEY,
 };

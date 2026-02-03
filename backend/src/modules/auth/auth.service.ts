@@ -1,11 +1,10 @@
-import { PrismaClient, User } from "@prisma/client";
+import { prisma } from "../../utils/prisma";
+import { User } from "../../generated/prisma/client";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { config } from "../../config/config";
 import { AppError } from "../../utils/AppError";
 import { SigninDto, SignupDto } from "./auth.interface";
-
-const prisma = new PrismaClient();
 
 export class AuthService {
     async signup(data: SignupDto): Promise<{ user: User; token: string }> {

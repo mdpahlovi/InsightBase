@@ -1,5 +1,3 @@
-import { User } from "@prisma/client";
-
 export type SignupDto = {
     name: string;
     email: string;
